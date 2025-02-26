@@ -55,7 +55,7 @@
                     <i data-feather="heart"></i>
                     <span>Wishlist</span>
                 </a> -->
-                <a href="javascript:void(0)" class="btn btn-primary btn-cart">
+                <a href="javascript:void(0)" class="btn btn-primary btn-cart" @click="addToCart(packet)">
                     <i data-feather="shopping-cart"></i>
                     <span class="add-to-cart">Add to cart</span>
                 </a>
@@ -82,9 +82,15 @@
             </div>
         </div>
     </section>
+    <div v-if="loading" class="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Adding to cart...</span>
+        </div>
+    </div>
 </template>
   
 <script>
+    import { eventBus } from '../../eventBus';
     export default {
         data() {
             return {
@@ -98,6 +104,7 @@
                 },
                 searchQuery: '',
                 pages: [],
+                loading: false,
             };
         },
         mounted() {
@@ -105,6 +112,16 @@
         },
         methods: {
             fetchPackets(page = 1) {
+                this.loading = true;
+
+                let loadingToast = toastr.info("Loading data... Please wait.", "⏳ Processing", {
+                    closeButton: false,
+                    tapToDismiss: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                    timeOut: 0,
+                    extendedTimeOut: 0
+                });
                 axios
                     .get('/operator/transaction-data', {
                         params: {
@@ -115,11 +132,28 @@
                     .then((response) => {
                         this.packets = response.data;
                         this.pages = Array.from({ length: this.packets.last_page }, (_, i) => i + 1);
-  
                         this.updateSearchResults();
+                        this.loading = false;
+                        toastr.clear(loadingToast);
+                        toastr.success("Data loaded successfully", "✅ Success", {
+                            closeButton: true,
+                            tapToDismiss: false,
+                            progressBar: true,
+                            positionClass: "toast-top-right",
+                            timeOut: 2000
+                        });
                   })
                   .catch((error) => {
-                      console.log(error);
+                        this.loading = false;
+                        console.log(error);
+                        toastr.clear(loadingToast);
+                        toastr.error('Error loading data. Please try again.', '❌ Error', {
+                            closeButton: true,
+                            tapToDismiss: false,
+                            progressBar: true,
+                            positionClass: "toast-top-right",
+                            timeOut: 3000
+                        });
                   });
             },
   
@@ -129,6 +163,52 @@
                     searchResultsDiv.textContent = `${this.packets.total} results found`;
                 }
             },
+
+            addToCart(packet) {
+                const cartData = {
+                    packetId: packet.id,
+                    locationId: packet.locationId,
+                    qty: 1, 
+                    price: packet.price,
+                    sub_total: packet.price, 
+                };
+
+                this.loading = true;
+
+                let loadingToast = toastr.info("Adding to cart... Please wait.", "⏳ Processing", {
+                    closeButton: false,
+                    tapToDismiss: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                    timeOut: 0, // Keep the toastr open
+                    extendedTimeOut: 0
+                });
+
+                axios.post('/operator/add-to-cart', cartData)
+                    .then((response) => {
+                        // if (response.data.message === 'This item is already in your cart.') {
+                        //     toastr.info(response.data.message); 
+                        // } else {
+                        //     toastr.success(response.data.message); 
+                        // }
+                        this.loading = false;
+                        toastr.clear(loadingToast);
+                        if (response.data.message === 'This item is already in your cart.') {
+                            toastr.info(response.data.message);
+                        } else {
+                            toastr.success(response.data.message)
+                            eventBus.cartUpdated = !eventBus.cartUpdated; 
+                        }
+                        // eventBus.updateCart();
+                    })
+                    .catch((error) => {
+                        console.log('Error adding to cart:', error);
+                        this.loading = false;
+                        toastr.clear(loadingToast);
+                        toastr.error('An error occurred while adding the item to the cart.')
+                    });
+            },
+
             formatIDR(value) {
                 return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
             }
@@ -137,6 +217,17 @@
 </script>  
   
 <style scoped>
-
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
 </style>
   

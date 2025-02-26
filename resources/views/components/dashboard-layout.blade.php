@@ -58,7 +58,6 @@
         @if(Route::is('operator.transaction'))
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-sliders.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/pages/app-ecommerce.css') }}">
-            <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-toastr.css') }}">
         @endif
     @endif
 

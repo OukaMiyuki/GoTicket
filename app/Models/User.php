@@ -14,6 +14,7 @@ use App\Models\Location;
 use App\Models\Invoice;
 use App\Models\Ticket;
 use App\Models\Voucher;
+use App\Models\Cart;
 
 class User extends Authenticatable {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -77,6 +78,10 @@ class User extends Authenticatable {
 
     public function vouchers(): HasMany {
         return $this->hasMany(Voucher::class, 'userId');
+    }
+
+    public function cart(): HasMany {
+        return $this->hasMany(Cart::class, 'userId');
     }
 
     protected static function booted() {

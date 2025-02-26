@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('userId');
             $table->unsignedBigInteger('locationId');
             $table->unsignedBigInteger('packetId');
-            $table->unsignedBigInteger('invoiceId');
+            $table->unsignedBigInteger('invoiceId')->nullable();
             $table->integer('qty');
             $table->string('price');
             $table->string('sub_total');

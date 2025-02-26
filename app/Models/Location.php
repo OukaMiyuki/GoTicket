@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Packet;
 use App\Models\LocationType;
 use App\Models\Voucher;
+use App\Models\Cart;
 
 class Location extends Model {
     use HasFactory;
@@ -35,5 +36,9 @@ class Location extends Model {
 
     public function vouchers(): BelongsToMany {
         return $this->belongsToMany(Voucher::class, 'voucher_locations', 'locationId', 'voucherId');
+    }
+
+    public function cart(): HasMany {
+        return $this->hasMany(Cart::class, 'locationId');
     }
 }

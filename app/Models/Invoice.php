@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\VoucherRedemption;
+use App\Models\Cart;
 
 class Invoice extends Model {
     use HasFactory;
@@ -26,5 +27,9 @@ class Invoice extends Model {
 
     public function voucherRedemption(): HasOne {
         return $this->hasOne(VoucherRedemption::class);
+    }
+
+    public function cart(): HasMany {
+        return $this->hasMany(Cart::class, 'invoiceId');
     }
 }
