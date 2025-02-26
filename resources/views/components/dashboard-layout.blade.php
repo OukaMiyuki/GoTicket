@@ -72,11 +72,12 @@
     <div class="drag-target"></div>
     @include('body.footer')
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+    @vite('resources/js/app.js')
     <script src="{{ asset('theme/app-assets/vendors/js/vendors.min.js') }}"></script>
     <script src="{{ asset('theme/app-assets/vendors/js/charts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('theme/app-assets/vendors/js/extensions/toastr.min.js') }}"></script>
     <script src="{{ asset('theme/app-assets/js/core/app-menu.js') }}"></script>
-    <script src="{{ asset('theme/app-assets/js/core/app.js') }}"></script>
+    <script src="{{ asset('theme/app-assets/js/core/theme.js') }}"></script>
     <script src="{{ asset('theme/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('theme/app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"></script>
