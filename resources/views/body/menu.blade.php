@@ -92,6 +92,12 @@
                         <span class="menu-title text-truncate" data-i18n="Map">Packet</span>
                     </a>
                 </li>
+                <li class="nav-item @if(Route::is('tenant.dashboard.tax')) active @endif">
+                    <a class="d-flex align-items-center" href="{{ route('tenant.dashboard.tax') }}">
+                        <i data-feather='percent'></i>
+                        <span class="menu-title text-truncate" data-i18n="Map">Tax Settings</span>
+                    </a>
+                </li>
                 <li class=" navigation-header">
                     <span data-i18n="Apps &amp; Pages">Revenue &amp; Transaction</span>
                     <i data-feather="more-horizontal"></i>

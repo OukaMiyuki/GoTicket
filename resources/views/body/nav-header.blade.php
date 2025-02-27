@@ -36,29 +36,37 @@
                     <ul class="search-list search-list-main"></ul>
                 </div>
             </li>
-            <li class="nav-item dropdown dropdown-cart mr-25">
-                <a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="shopping-cart"></i><span class="badge badge-pill badge-primary badge-up cart-item-count">0</span></a>
-                <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-                    <li class="dropdown-menu-header">
-                        <div class="dropdown-header d-flex">
-                            <h4 class="notification-title mb-0 mr-auto">My Cart</h4>
-                            <div class="badge badge-pill badge-light-primary" id="item-count">0 Items</div>
-                        </div>
-                    </li>
-                    <li class="scrollable-container media-list">
-                        <div id="app1">
-                            <cart-list></cart-list>
-                        </div>
-                    </li>
-                    <li class="dropdown-menu-footer">
-                        <div class="d-flex justify-content-between mb-1">
-                            <h6 class="font-weight-bolder mb-0">Total:</h6>
-                            <h6 class="text-primary font-weight-bolder mb-0" id="total-price"></h6>
-                        </div>
-                        <a class="btn btn-primary btn-block" href="app-ecommerce-checkout.html">Checkout</a>
-                    </li>
-                </ul>
-            </li>
+            @if (Auth::user()->role === 'playground_operator' || Auth::user()->role === 'visitor_member')
+                <li class="nav-item dropdown dropdown-cart mr-25">
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="shopping-cart"></i><span class="badge badge-pill badge-primary badge-up cart-item-count">0</span></a>
+                    <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                        <li class="dropdown-menu-header">
+                            <div class="dropdown-header d-flex">
+                                <h4 class="notification-title mb-0 mr-auto">My Cart</h4>
+                                <div class="badge badge-pill badge-light-primary" id="item-count">0 Items</div>
+                            </div>
+                        </li>
+                        <li class="scrollable-container media-list">
+                            @if (Auth::check() && Auth::user()->role === 'playground_operator')
+                                <div id="operator-cart">
+                                    <cart-list></cart-list>
+                                </div>
+                            @endif
+                        </li>
+                        <li class="dropdown-menu-footer">
+                            <div class="d-flex justify-content-between mb-1">
+                                <h6 class="font-weight-bolder mb-0">Total:</h6>
+                                <h6 class="text-primary font-weight-bolder mb-0" id="total-price"></h6>
+                            </div>
+                            <a class="btn btn-primary btn-block" href="
+                                @if (Auth::check() && Auth::user()->role === 'playground_operator')
+                                    {{ route('operator.transaction.checkout') }}
+                                @endif
+                            ">Checkout</a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
             <li class="nav-item dropdown dropdown-notification mr-25">
                 <a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span class="badge badge-pill badge-danger badge-up">5</span></a>
                 <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">

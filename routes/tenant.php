@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\Access\Tenant\TenantLocationController;
 use App\Http\Controllers\Auth\Access\Tenant\TenantEmployeeController;
 use App\Http\Controllers\Auth\Access\Tenant\TenantPacketController;
 use App\Http\Controllers\Auth\Access\Tenant\TenantVoucherController;
+use App\Http\Controllers\Auth\Access\Tenant\TenantTaxController;
 
 Route::middleware(['role:playground_owner'])->group(function () {
     Route::get('/tenant', [DashboardController::class, 'tenant'])->name('tenant.dashboard');
@@ -38,4 +39,7 @@ Route::middleware(['role:playground_owner'])->group(function () {
     Route::post('/tenant/voucher/update', [TenantVoucherController::class, 'addVoucherDataUpdate'])->name('tenant.dashboard.voucher.update');
     Route::get('/tenant/voucher/update/status/{voucherId}', [TenantVoucherController::class, 'addVoucherDataStatusUpdate'])->name('tenant.dashboard.voucher.update.status');
     Route::get('/tenant/voucher/delete/{voucherId}', [TenantVoucherController::class, 'deleteVoucherData'])->name('tenant.dashboard.voucher.delete');
+
+    Route::get('/tenant/tax-setup', [TenantTaxController::class, 'index'])->name('tenant.dashboard.tax');
+    Route::post('/tenant/tax-setup/insert', [TenantTaxController::class, 'taxInsert'])->name('tenant.dashboard.tax.insert');
 });

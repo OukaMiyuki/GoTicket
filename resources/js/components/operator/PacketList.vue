@@ -3,12 +3,12 @@
         <div class="row mt-1">
             <div class="col-sm-12">
                 <div class="input-group input-group-merge">
-                    <input 
-                        type="text" 
-                        class="form-control search-product" 
-                        v-model="searchQuery" 
-                        @input="fetchPackets" 
-                        placeholder="Search Product" 
+                    <input
+                        type="text"
+                        class="form-control search-product"
+                        v-model="searchQuery"
+                        @input="fetchPackets(1, true)"
+                        placeholder="Search Product"
                     />
                     <div class="input-group-append">
                         <span class="input-group-text"><i data-feather="search" class="text-muted"></i></span>
@@ -17,19 +17,19 @@
             </div>
         </div>
     </section>
-  
+
     <section id="ecommerce-products" class="grid-view">
         <div v-for="packet in packets.data" :key="packet.id" class="card ecommerce-card">
             <div class="item-img text-center">
-                <a :href="`/app-ecommerce-details/${packet.id}`">
+                <!-- <a :href="`/app-ecommerce-details/${packet.id}`"> -->
                     <img class="img-fluid card-img-top" :src="`/storage/${packet.galleries[0]?.image || 'default.jpg'}`" alt="img-placeholder" />
-                </a>
+                <!-- </a> -->
             </div>
             <div class="card-body">
                 <div class="item-wrapper">
                     <div class="item-rating">
                         <ul class="unstyled-list list-inline">
-                           
+
                         </ul>
                     </div>
                     <div class="item-cost">
@@ -38,19 +38,19 @@
                 </div>
                 <h6 class="item-name">
                     <a class="text-body" :href="`/app-ecommerce-details/${packet.id}`">{{ packet.packet_name }}</a>
-                    <span class="card-text item-company">By <a href="javascript:void(0)" class="company-name">Company</a></span>
+                    <span class="card-text item-company">By <a href="javascript:void(0)" class="company-name">{{ packet.location.location_name }}</a></span>
                 </h6>
-                <p class="card-text item-description">{{ packet.packet_detail }}</p>
+                <p class="card-text item-description">{{ stripHtml(packet.packet_detail) }}</p>
             </div>
             <div class="item-options text-center">
-                <!-- <div class="item-wrapper">
+                <div class="item-wrapper">
                     <div class="item-cost">
-                        <h4 class="item-price">{{ packet.price }} {{ packet.currency }}</h4>
-                        <p class="card-text shipping">
+                        <h4 class="item-price">{{ formatIDR(packet.price) }}</h4>
+                        <!-- <p class="card-text shipping">
                             <span class="badge badge-pill badge-light-success">Free Shipping</span>
-                        </p>
+                        </p> -->
                     </div>
-                </div> -->
+                </div>
                 <!-- <a href="javascript:void(0)" class="btn btn-light btn-wishlist">
                     <i data-feather="heart"></i>
                     <span>Wishlist</span>
@@ -62,7 +62,7 @@
             </div>
         </div>
     </section>
-  
+
     <section id="ecommerce-pagination">
         <div class="row">
             <div class="col-sm-12">
@@ -88,7 +88,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
     import { eventBus } from '../../eventBus';
     export default {
@@ -108,20 +108,33 @@
             };
         },
         mounted() {
-            this.fetchPackets(); 
+            this.fetchPackets();
         },
         methods: {
-            fetchPackets(page = 1) {
+            fetchPackets(page = 1, isSearch = false) {
                 this.loading = true;
 
-                let loadingToast = toastr.info("Loading data... Please wait.", "⏳ Processing", {
-                    closeButton: false,
-                    tapToDismiss: false,
-                    progressBar: true,
-                    positionClass: "toast-top-right",
-                    timeOut: 0,
-                    extendedTimeOut: 0
-                });
+                // let loadingToast = toastr.info("Loading data... Please wait.", "⏳ Processing", {
+                //     closeButton: false,
+                //     tapToDismiss: false,
+                //     progressBar: true,
+                //     positionClass: "toast-top-right",
+                //     timeOut: 0,
+                //     extendedTimeOut: 0
+                // });
+
+                if (!isSearch) {
+                    this.loading = true;
+                    var loadingToast = toastr.info("Loading data... Please wait.", "⏳ Processing", {
+                        closeButton: false,
+                        tapToDismiss: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right",
+                        timeOut: 0,
+                        extendedTimeOut: 0
+                    });
+                }
+
                 axios
                     .get('/operator/transaction-data', {
                         params: {
@@ -133,30 +146,58 @@
                         this.packets = response.data;
                         this.pages = Array.from({ length: this.packets.last_page }, (_, i) => i + 1);
                         this.updateSearchResults();
+                        // this.loading = false;
+                        // toastr.clear(loadingToast);
+                        // toastr.success("Data loaded successfully", "✅ Success", {
+                        //     closeButton: true,
+                        //     tapToDismiss: false,
+                        //     progressBar: true,
+                        //     positionClass: "toast-top-right",
+                        //     timeOut: 2000
+                        // });
+                        if (!isSearch) {
+                            this.loading = false;
+                            toastr.clear(loadingToast);
+                            toastr.success("Data loaded successfully", "✅ Success", {
+                                closeButton: true,
+                                tapToDismiss: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right",
+                                timeOut: 2000
+                            });
+                        }
+                    })
+                    .catch((error) => {
                         this.loading = false;
-                        toastr.clear(loadingToast);
-                        toastr.success("Data loaded successfully", "✅ Success", {
-                            closeButton: true,
-                            tapToDismiss: false,
-                            progressBar: true,
-                            positionClass: "toast-top-right",
-                            timeOut: 2000
-                        });
-                  })
-                  .catch((error) => {
+                        // console.log(error);
+                        // toastr.clear(loadingToast);
+                        // toastr.error('Error loading data. Please try again.', '❌ Error', {
+                        //     closeButton: true,
+                        //     tapToDismiss: false,
+                        //     progressBar: true,
+                        //     positionClass: "toast-top-right",
+                        //     timeOut: 3000
+                        // });
+                        if (!isSearch) {
+                            this.loading = false;
+                            toastr.clear(loadingToast);
+                            toastr.error('Error loading data. Please try again.', '❌ Error', {
+                                closeButton: true,
+                                tapToDismiss: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right",
+                                timeOut: 3000
+                            });
+                        }
+                    })
+                    .finally(() => {
                         this.loading = false;
-                        console.log(error);
-                        toastr.clear(loadingToast);
-                        toastr.error('Error loading data. Please try again.', '❌ Error', {
-                            closeButton: true,
-                            tapToDismiss: false,
-                            progressBar: true,
-                            positionClass: "toast-top-right",
-                            timeOut: 3000
-                        });
-                  });
+                        if (!isSearch) {
+                            toastr.clear(loadingToast);
+                        }
+                    });
             },
-  
+
             updateSearchResults() {
                 const searchResultsDiv = document.getElementById('search-results');
                 if (searchResultsDiv) {
@@ -168,9 +209,9 @@
                 const cartData = {
                     packetId: packet.id,
                     locationId: packet.locationId,
-                    qty: 1, 
+                    qty: 1,
                     price: packet.price,
-                    sub_total: packet.price, 
+                    sub_total: packet.price,
                 };
 
                 this.loading = true;
@@ -187,9 +228,9 @@
                 axios.post('/operator/add-to-cart', cartData)
                     .then((response) => {
                         // if (response.data.message === 'This item is already in your cart.') {
-                        //     toastr.info(response.data.message); 
+                        //     toastr.info(response.data.message);
                         // } else {
-                        //     toastr.success(response.data.message); 
+                        //     toastr.success(response.data.message);
                         // }
                         this.loading = false;
                         toastr.clear(loadingToast);
@@ -197,7 +238,7 @@
                             toastr.info(response.data.message);
                         } else {
                             toastr.success(response.data.message)
-                            eventBus.cartUpdated = !eventBus.cartUpdated; 
+                            eventBus.cartUpdated = !eventBus.cartUpdated;
                         }
                         // eventBus.updateCart();
                     })
@@ -209,13 +250,22 @@
                     });
             },
 
+            stripHtml(html) {
+                return html
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    // .replace(/<br\s*\/?>/gi, "\n")
+                    // .replace(/<\/p>/gi, "\n")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            },
+
             formatIDR(value) {
                 return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
             }
         },
     };
-</script>  
-  
+</script>
+
 <style scoped>
     .loading-overlay {
         position: fixed;
@@ -230,4 +280,3 @@
         z-index: 9999;
     }
 </style>
-  

@@ -16,6 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/vendors.min.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/forms/wizard/bs-stepper.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/forms/spinner/jquery.bootstrap-touchspin.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/charts/apexcharts.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/extensions/toastr.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/bootstrap.css') }}">
@@ -55,9 +57,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-file-uploader.css') }}">
 
     @if (Auth::check() && Auth::user()->role == "playground_operator")
-        @if(Route::is('operator.transaction'))
+        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout'))
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-sliders.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/pages/app-ecommerce.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-wizard.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-number-input.css') }}">
         @endif
     @endif
 
@@ -127,12 +131,15 @@
         @endif
     @endif
     @if (Auth::check() && Auth::user()->role == "playground_operator")
-        @if(Route::is('operator.transaction'))
+        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout'))
             <script src="{{ asset('theme/app-assets/vendors/js/extensions/wNumb.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/vendors/js/extensions/nouislider.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/js/scripts/pages/app-ecommerce.js') }}"></script>
+            <script src="{{ asset('theme/app-assets/vendors/js/forms/wizard/bs-stepper.min.js') }}"></script>
+            <script src="{{ asset('theme/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js') }}"></script>
+            <script src="{{ asset('theme/app-assets/js/scripts/pages/app-ecommerce-checkout.js') }}"></script>
         @endif
-    @endif  
+    @endif
     <script>
         $(document).ready(function () {
             @if(session('success'))
@@ -165,6 +172,11 @@
                 });
             }
         })
+    </script>
+    <script>
+        window.Laravel = {
+            role: @json(auth()->check() ? auth()->user()->role : null)
+        };
     </script>
 </body>
 </html>

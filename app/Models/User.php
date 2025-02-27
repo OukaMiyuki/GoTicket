@@ -15,6 +15,7 @@ use App\Models\Invoice;
 use App\Models\Ticket;
 use App\Models\Voucher;
 use App\Models\Cart;
+use App\Models\Tax;
 
 class User extends Authenticatable {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -82,6 +83,10 @@ class User extends Authenticatable {
 
     public function cart(): HasMany {
         return $this->hasMany(Cart::class, 'userId');
+    }
+
+    public function tax(): HasOne {
+        return $this->hasOne(Tax::class, 'userId');
     }
 
     protected static function booted() {

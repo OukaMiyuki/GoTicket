@@ -11,4 +11,6 @@ Route::middleware(['role:playground_operator'])->group( function(){
     Route::get('/operator/cart-item', [OperatorTransactionController::class, 'getCartItems'])->name('operator.cart-item');
     Route::put('/operator/cart/update/{id}', [OperatorTransactionController::class, 'updateCartItemQuantity'])->name('operator.cart-item-update-qty');
     Route::delete('/operator/cart/delete/{itemId}', [OperatorTransactionController::class, 'removeFromCart'])->name('operator.cart.delete');
+
+    Route::get('/operator/transaction/checkout', [OperatorTransactionController::class, 'checkoutIndex'])->name('operator.transaction.checkout');
 });

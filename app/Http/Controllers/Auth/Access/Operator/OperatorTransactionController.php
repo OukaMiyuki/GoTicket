@@ -22,13 +22,13 @@ class OperatorTransactionController extends Controller {
         }
     }
     public function fetchData(Request $request) {
-        
+
         $search = $request->query('search', '');
         $page = $request->query('page', 1);
 
-        $packets = Packet::with('galleries')
-                        ->where('packet_name', 'like', "%{$search}%") 
-                        ->paginate(10); 
+        $packets = Packet::with(['galleries', 'location'])
+                        ->where('packet_name', 'like', "%{$search}%")
+                        ->paginate(10);
 
         return response()->json($packets);
     }
@@ -52,53 +52,53 @@ class OperatorTransactionController extends Controller {
         $cart = Cart::create([
             'userId' => $userId,
             'packetId' => $request->packetId,
-            'locationId' => $request->locationId, 
+            'locationId' => $request->locationId,
             'invoiceId' => NULL,
             'qty' => $request->qty,
             'price' => $packet->price,
             'sub_total' => $request->qty * $packet->price,
         ]);
-    
+
         return response()->json(['message' => 'Item added to cart', 'cart' => $cart]);
     }
 
     public function getCartItems(Request $request) {
         $userId = Auth::id();
         $cartData = Cart::with([
-                                'user', 
-                                'location', 
+                                'user',
+                                'location',
                                 'packet' => function($query){
                                     $query->with(['galleries'])->get();
-                                }, 
+                                },
                         ])
                         ->whereNull('invoiceId')
                         ->where('userId', $userId)
                         ->latest()
                         ->get();
-    
+
         return response()->json([
-            'cartItems' => $cartData, 
+            'cartItems' => $cartData,
             'total' => $cartData->sum('sub_total'),
         ]);
     }
-    
+
     public function updateCartItemQuantity(Request $request, $id) {
         $userId = Auth::id();
         $cartItem = Cart::where('userId', $userId)->whereNull('invoiceId')->where('id', $id)->first();
-    
+
         if (!$cartItem) {
             return response()->json(['message' => 'Cart item not found'], 404);
         }
-    
+
         $validated = $request->validate([
             'qty' => 'required|integer|min:1',
         ]);
-    
+
         $cartItem->qty = $validated['qty'];
         $cartItem->sub_total = $cartItem->price * $cartItem->qty;
-    
+
         $cartItem->save();
-    
+
         return response()->json(['message' => 'Cart item updated successfully', 'cart' => $cartItem]);
     }
 
@@ -119,5 +119,17 @@ class OperatorTransactionController extends Controller {
             return response()->json(['message' => 'An error occurred while removing the item from the cart.'], 500);
         }
     }
-    
+
+    public function checkoutIndex(){
+        if (! Auth::check()) {
+            return redirect()->route('login');
+        } else {
+            $user = Auth::user();
+            if ($user && !in_array($user->role, ['playground_operator'])) {
+                abort(403);
+            }
+            return view('auth.operator.page.checkout');
+        }
+    }
+
 }

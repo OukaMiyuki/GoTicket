@@ -22,7 +22,6 @@
             <!-- <h5 class="cart-item-price">{{ formatIDR(item.sub_total) }}</h5> -->
             <div class="cart-item-price-container">
                 <h5 class="cart-item-price">{{ formatIDR(item.sub_total) }}</h5>
-                <!-- The X button inside the price container -->
                 <button class="cart-item-remove-btn" @click="removeFromCart(item.id)">
                     <span>x</span>
                 </button>
@@ -61,9 +60,9 @@ export default {
     },
     created() {
         console.log('Component Created - Fetching cart items...');
-        this.fetchCartItems(); 
+        this.fetchCartItems();
         this.$watch(() => eventBus.cartUpdated, () => {
-            this.fetchCartItems(); 
+            this.fetchCartItems();
         });
     },
     computed: {
@@ -206,6 +205,7 @@ export default {
     }
 
     .cart-item-price-container {
+        margin-right: .9rem;
         position: relative;
         display: flex;
         align-items: center;
@@ -214,11 +214,12 @@ export default {
     .cart-item-remove-btn {
         position: absolute;
         top: -4px;
-        right: -17px; 
+        right: -20px;
         background-color: transparent;
         border: none;
         color: #ff0000;
-        font-size: 18px;
+        /* font-size: 18px; */
+        font-size: 1.2rem;
         border-radius: 50%;
         padding: 5px;
         cursor: pointer;
@@ -226,7 +227,7 @@ export default {
     }
 
     .cart-item-remove-btn:hover {
-        background-color: rgba(255, 0, 0, 0.1); 
+        background-color: rgba(255, 0, 0, 0.1);
         color: #fff;
     }
 
@@ -240,7 +241,7 @@ export default {
         font-size: 1rem;
     }
 
-    @media (max-width: 767px) { 
+    @media (max-width: 767px) {
         .cart-item-price {
             font-size: .9rem;
         }
