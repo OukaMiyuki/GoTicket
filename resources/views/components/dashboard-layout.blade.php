@@ -31,6 +31,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/pages/dashboard-ecommerce.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/charts/chart-apex.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-toastr.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/animate/animate.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/extensions/sweetalert2.min.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/tables/datatable/responsive.bootstrap4.min.css') }}">
@@ -51,6 +53,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/pickers/form-pickadate.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-quill-editor.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-sweet-alerts.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/vendors/css/file-uploaders/dropzone.min.css') }}">
 
@@ -108,6 +112,10 @@
     <script src="{{ asset('theme/app-assets/js/scripts/components/components-modals.js') }}"></script>
 
     <script src="{{ asset('theme/app-assets/js/scripts/forms/pickers/form-pickers.js') }}"></script>
+
+    <script src="{{ asset('theme/app-assets/vendors/js/extensions/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('theme/app-assets/vendors/js/extensions/polyfill.min.js') }}"></script>
+    <script src="{{ asset('theme/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js') }}"></script>
 
     @if (Auth::check() && Auth::user()->role == "playground_owner")
         @if(Route::is('tenant.dashboard'))

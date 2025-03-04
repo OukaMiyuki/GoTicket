@@ -70,6 +70,11 @@ export default {
             return this.cartItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
         }
     },
+    watch: {
+        'eventBus.cartUpdated': function(newValue, oldValue) {
+            this.fetchCartItems();
+        }
+    },
     methods: {
         fetchCartItems() {
             console.log('Fetching cart items...');
@@ -171,6 +176,7 @@ export default {
             axios.delete(`/operator/cart/delete/${itemId}`)
                 .then(() => {
                     console.log('Item removed successfully');
+                    eventBus.updateCart();
                     this.fetchCartItems();
                     this.updateTotalPrice();
                     this.updateCartCount();
@@ -185,6 +191,7 @@ export default {
             axios.put(`/operator/cart/update/${item.id}`, { qty: item.qty })
                 .then((response) => {
                     console.log('Item quantity updated successfully:', response.data);
+                    eventBus.updateCart();
                     this.fetchCartItems();
                     this.updateTotalPrice();
                     this.updateCartCount();

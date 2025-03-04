@@ -36,4 +36,19 @@ class Ticket extends Model {
     public function ticketDetail(): HasOne {
         return $this->hasOne(TicketDetail::class, 'ticketId');
     }
+
+    public static function boot() {
+        parent::boot();
+
+        static::created(function ($model) {
+            $code = "GTCX";
+            $date = date('dmY');
+            $index_number = (int) Ticket::max('id') + 1;
+            $generate_ticket_id = $code . $date . str_pad($index_number, 15, '0', STR_PAD_LEFT);
+            $ticketDetail = new TicketDetail();
+            $ticketDetail->ticketId = $model->id;
+            $ticketDetail->ticket_unique_id = $generate_ticket_id;
+            $ticketDetail->save();
+        });
+    }
 }

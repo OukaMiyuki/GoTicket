@@ -127,6 +127,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'qris_response_error' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/qris_response_error.log'),
+            'level' => 'error',
+        ],
+
     ],
 
 ];

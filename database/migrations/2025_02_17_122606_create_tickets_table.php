@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('invoiceId');
             $table->date('start_date');
             $table->date('end_date');
-            $table->boolean('redeemed');
-            $table->boolean('status');
+            $table->boolean('redeemed')->default(0);
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
