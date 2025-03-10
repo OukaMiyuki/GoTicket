@@ -2,6 +2,7 @@
 
 namespace App\Services\Ticketing;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Cart;
 use App\Models\Location;
 use App\Models\Ticket;
@@ -69,7 +70,7 @@ class TicketingService {
 
                 $cartItem->update(['invoiceId' => $invoice->id]);
             }
-            
+
             foreach ($locationTicketCount as $locationId => $ticketCount) {
                 Location::where('id', $locationId)->decrement('max_ticket_quota', $ticketCount);
             }
@@ -77,7 +78,9 @@ class TicketingService {
             return ['status' => true, 'message' => 'Tickets generated successfully'];
 
         } catch (Exception $e) {
-            return ['status' => false, 'message' => $e->getMessage()];
+            // return ['status' => false, 'message' => $e->getMessage()];
+            Log::error('Ticket generation failed: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

@@ -52,13 +52,13 @@
                     <div class="checkout-items">
                         <div v-if="cartItems.length > 0" v-for="item in cartItems" :key="item.id" class="card ecommerce-card">
                             <div class="item-img">
-                                <a href="app-ecommerce-details.html">
+                                <a href="#">
                                     <img :src="`/storage/${item.packet.galleries[0]?.image || 'default.jpg'}`" alt="img-placeholder" />
                                 </a>
                             </div>
                             <div class="card-body">
                                 <div class="item-name">
-                                    <h6 class="mb-0"><a href="app-ecommerce-details.html" class="text-body">{{ item.packet.packet_name }}</a></h6>
+                                    <h6 class="mb-0"><a href="#" class="text-body">{{ item.packet.packet_name }}</a></h6>
                                     <span class="item-company">By <a href="javascript:void(0)" class="company-name">{{ item.location.location_name }}</a></span>
                                     <div class="item-rating">
                                         <!-- <ul class="unstyled-list list-inline">
@@ -178,7 +178,7 @@
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group mb-2">
                                         <label for="checkout-number">Mobile Number (Opsional):</label>
-                                        <input type="number" id="checkout-number" class="form-control" :class="{ 'is-invalid': errors.mobileNumber }" name="mnumber" v-model="formData.mobileNumber" placeholder="08XXXXXXXXXXX" />
+                                        <input type="text" id="checkout-number" class="form-control" :class="{ 'is-invalid': errors.mobileNumber }" name="mnumber" v-model="formData.mobileNumber" placeholder="08XXXXXXXXXXX" />
                                         <div class="invalid-feedback">{{ errors.mobileNumber }}</div>
                                     </div>
                                 </div>
@@ -475,15 +475,6 @@ export default {
         },
 
         processPayment() {
-            // if (!this.formData.paymentMethod) {
-            //     toastr.warning("Please select a payment method!", "Warning", {
-            //         closeButton: true,
-            //         progressBar: true,
-            //         positionClass: "toast-top-right",
-            //         timeOut: 2000
-            //     });
-            //     return;
-            // }
 
             const paymentData = {
                 fullName: this.formData.fullName,
@@ -492,7 +483,7 @@ export default {
                 address: this.formData.address,
                 note: this.formData.note,
                 paymentMethod: this.formData.paymentMethod,
- 
+
                 // totalItems: this.$root.totalItems,
                 // totalQuantity: this.$root.totalQuantity,
                 // totalPrice: this.$root.totalPrice,
@@ -501,23 +492,47 @@ export default {
 
             axios.post('/operator/transaction/checkout/process', paymentData)
                 .then(response => {
+                    eventBus.updateCart();
+                    // toastr.success("Payment processed successfully!", "Success", {
+                    //     closeButton: true,
+                    //     progressBar: true,
+                    //     positionClass: "toast-top-right",
+                    //     timeOut: 2000
+                    // });
+                    // this.formData.fullName = '';
+                    // this.formData.mobileNumber = '';
+                    // this.formData.email = '';
+                    // this.formData.address = '';
+                    // this.formData.note = '';
+                    // this.formData.paymentMethod = '';
+
+                    // if (response.data.redirectUrl) {
+                    //     window.location.href = response.data.redirectUrl;
+                    // }
                     toastr.success("Payment processed successfully!", "Success", {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-top-right",
-                        timeOut: 2000
+                        timeOut: 2000,
+                        onHidden: () => {
+                            this.redirectUser(response);
+                        },
+                        onCloseClick: () => {
+                            this.redirectUser(response);
+                        }
                     });
-                    this.formData.fullName = '';
-                    this.formData.mobileNumber = '';
-                    this.formData.email = '';
-                    this.formData.address = '';
-                    this.formData.note = '';
-                    this.formData.paymentMethod = '';
                 })
                 .catch(error => {
                     if (error.response && error.response.status === 422) {
                         let errorMessage = Object.values(error.response.data.errors).map(e => e.join(', ')).join('\n');
                         toastr.error(errorMessage, "Validation Error", {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-top-right",
+                            timeOut: 5000
+                        });
+                    } else if (error.response && error.response.status === 500) {
+                        toastr.error(error.response.data.message, "Error", {
                             closeButton: true,
                             progressBar: true,
                             positionClass: "toast-top-right",
@@ -532,6 +547,18 @@ export default {
                         });
                     }
                 });
+        },
+
+        redirectUser(response) {
+            this.formData.fullName = '';
+            this.formData.mobileNumber = '';
+            this.formData.email = '';
+            this.formData.address = '';
+            this.formData.note = '';
+            this.formData.paymentMethod = '';
+            if (response.data.redirectUrl) {
+                window.location.href = response.data.redirectUrl;
+            }
         },
 
         updateQuantity(item) {

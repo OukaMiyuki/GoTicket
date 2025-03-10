@@ -41,13 +41,13 @@ class Ticket extends Model {
         parent::boot();
 
         static::created(function ($model) {
-            $code = "GTCX";
-            $date = date('dmY');
-            $index_number = (int) Ticket::max('id') + 1;
-            $generate_ticket_id = $code . $date . str_pad($index_number, 15, '0', STR_PAD_LEFT);
+            $prefix = "TIX"; 
+            $date = date('dmy');
+            $randomCode = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 5));
+            $ticketId = "{$prefix}-{$date}-{$randomCode}";
             $ticketDetail = new TicketDetail();
             $ticketDetail->ticketId = $model->id;
-            $ticketDetail->ticket_unique_id = $generate_ticket_id;
+            $ticketDetail->ticket_unique_id = $ticketId;
             $ticketDetail->save();
         });
     }

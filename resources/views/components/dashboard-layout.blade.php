@@ -61,7 +61,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-file-uploader.css') }}">
 
     @if (Auth::check() && Auth::user()->role == "playground_operator")
-        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout'))
+        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout') || Route::is('operator.transaction.invoice.ticket'))
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-sliders.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/pages/app-ecommerce.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-wizard.css') }}">
@@ -139,7 +139,7 @@
         @endif
     @endif
     @if (Auth::check() && Auth::user()->role == "playground_operator")
-        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout'))
+        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout') || Route::is('operator.transaction.invoice.ticket'))
             <script src="{{ asset('theme/app-assets/vendors/js/extensions/wNumb.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/vendors/js/extensions/nouislider.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/js/scripts/pages/app-ecommerce.js') }}"></script>

@@ -10,6 +10,8 @@ use App\Models\Invoice;
 class InvoiceDetail extends Model {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function invoice(): BelongsTo {
         return $this->belongsTo(Invoice::class, 'invoiceId');
     }

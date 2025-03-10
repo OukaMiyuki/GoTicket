@@ -14,6 +14,7 @@ use App\Models\Ticket;
 use App\Models\VoucherRedemption;
 use App\Models\Cart;
 use App\Models\InvoiceDetail;
+use Exception;
 
 class Invoice extends Model {
     use HasFactory;
@@ -57,9 +58,8 @@ class Invoice extends Model {
             $invoiceDetail->phone_number    = request()->mobileNumber;
             $invoiceDetail->address         = request()->address;
             $invoiceDetail->note            = request()->note;
+            $invoiceDetail->save();
             self::generatePayment($model);
-
-
         });
     }
     
@@ -82,7 +82,11 @@ class Invoice extends Model {
                     $model->payment_reference = $qrisData;
                 } else {
                     Log::channel('qris_response_error')->error("Payment request failed! Result:\n" . json_encode($qris, JSON_PRETTY_PRINT));
+                    throw new Exception('Payment processing failed');
                 }
+            } else {
+                Log::channel('qris_response_error')->error("There's an error processing Qris Payment : Null Response.");
+                throw new Exception('Payment processing failed');
             }
         } else if(request()->paymentMethod === "tunai"){
             $model->payment_method = 'Tunai';
@@ -91,11 +95,6 @@ class Invoice extends Model {
         }
 
         $model->save();
-        
-        
-        // else if($model->payment_method === "va_nobu"){
-
-        // }
     }
 
     private static function generateQris($model) {

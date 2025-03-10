@@ -59,6 +59,7 @@ class OperatorTransactionController extends Controller {
 
         $cartItem = Cart::where('userId', $userId)
                     ->where('packetId', $request->packetId)
+                    ->whereNull('invoiceId')
                     ->first();
 
         if ($cartItem) {
@@ -193,7 +194,7 @@ class OperatorTransactionController extends Controller {
         if($cartData->isEmpty()){
             return redirect()->back()->with('error', 'Your cart is empty!');
         }
-        
+
         $ticketService = new TicketingService();
 
         $availabilityCheck = $ticketService->checkAvailability($cartData);
@@ -215,40 +216,61 @@ class OperatorTransactionController extends Controller {
             }
         }
 
-        $invoice = Invoice::create([
-            'userId'                    => $userId,
-            'operatorId'                => $userId,
-            'transaction_timestamp'     => $now,
-            'payment_timestamp'         => $now,
-            'qty'                       => $qtyTotal,
-            'price'                     => $priceAmount,
-            'tax'                       => $tax_value,
-            'tax_value'                 => $tax_price,
-            'discount'                  => 0,
-            'discount_value'            => 0,
-            'total_payment_amount'      => $total_payment_amount,
-        ]);
+        DB::beginTransaction();
 
-        // $paymentMethod = $validatedData['paymentMethod'];
-        // if ($paymentMethod === 'tunai') {
-        //     $invoice->payment_method = 'Tunai';
-        //     $invoice->payment_status = 1;
-        //     $invoice->payment_status_detail = 'paid';
-        //     $redirecting = "";
-        // } else if ($paymentMethod == 'qris') {
-           
-        // } else if($paymentMethod == 'va_nobu') {
-        //     return redirect()->back()->with('error', 'Feature not yet created!');
-        // }
-        
-        // $invoice->save();
+        try {
 
-        $ticketGeneration = $ticketService->generateTickets($userId, $cartData, $invoice);
-        if (!$ticketGeneration['status']) {
-            return redirect()->back()->with('error', $ticketGeneration['message']);
+            $invoice = Invoice::create([
+                'userId'                    => $userId,
+                'operatorId'                => $userId,
+                'transaction_timestamp'     => $now,
+                'payment_timestamp'         => $now,
+                'qty'                       => $qtyTotal,
+                'price'                     => $priceAmount,
+                'tax'                       => $tax_value,
+                'tax_value'                 => $tax_price,
+                'discount'                  => 0,
+                'discount_value'            => 0,
+                'total_payment_amount'      => $total_payment_amount,
+            ]);
+
+            $ticketGeneration = $ticketService->generateTickets($userId, $cartData, $invoice);
+            if (!$ticketGeneration['status']) {
+                // return redirect()->back()->with('error', $ticketGeneration['message']);
+                throw new Exception($ticketGeneration['message']);
+            }
+
+            DB::commit();
+
+            $paymentMethod = $validatedData['paymentMethod'];
+            $redirectUrl = $this->handleRedirectionAfterCheckout($invoice, $paymentMethod);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment processed successfully!',
+                'redirectUrl' => $redirectUrl,
+            ]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Checkout process failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'There was an issue processing your order. Please try again later.');
+        }
+    }
+
+    private function handleRedirectionAfterCheckout($invoice, $paymentMethod){
+        if(!is_null($invoice)){
+            if($paymentMethod== 'tunai'){
+                return url('/operator/transaction/invoice/ticket/' . $invoice->id);
+            } else {
+                return url('/operator/transaction/checkout/pay/' . $invoice->id);
+            }
         }
 
-        return response()->json(['message' => 'Order submitted successfully', 'data' => $validatedData]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Checkout process error, please contact admin!'
+        ], 500);
     }
 
     public function testQris(){

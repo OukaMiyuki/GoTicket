@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\Access\DashboardController;
 use App\Http\Controllers\Auth\Access\Operator\OperatorTransactionController;
+use App\Http\Controllers\Auth\Access\Operator\OperatorTicketController;
 
 Route::middleware(['role:playground_operator'])->group( function(){
     Route::get('/operator', [DashboardController::class, 'operator'])->name('operator.dashboard');
@@ -13,6 +14,11 @@ Route::middleware(['role:playground_operator'])->group( function(){
     Route::delete('/operator/cart/delete/{itemId}', [OperatorTransactionController::class, 'removeFromCart'])->name('operator.cart.delete');
     Route::get('/operator/transaction/checkout', [OperatorTransactionController::class, 'checkoutIndex'])->name('operator.transaction.checkout');
     Route::post('/operator/transaction/checkout/process', [OperatorTransactionController::class, 'checkoutProcess'])->name('operator.transaction.checkout.process');
+
+    Route::get('/operator/transaction/checkout/pay/{invoiceId}', [OperatorTicketController::class, 'ticketInvoicePayment'])->name('operator.transaction.invoice.checkout.pay');
+
+    Route::get('/operator/transaction/invoice/ticket/{invoiceId}', [OperatorTicketController::class, 'ticketInvoiceList'])->name('operator.transaction.invoice.ticket');
+    Route::post('/operator/transaction/invoice/ticket/info/insert', [OperatorTicketController::class, 'ticketInvoiceInfoInsert'])->name('operator.transaction.invoice.ticket.info.insert');
 
     Route::get('/operator/cekqris', [OperatorTransactionController::class, 'testQris']);
 });

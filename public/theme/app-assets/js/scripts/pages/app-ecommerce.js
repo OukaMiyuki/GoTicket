@@ -137,3 +137,21 @@ $(window).on('resize', function () {
     $('.body-content-overlay').removeClass('show');
   }
 });
+
+$(document).ready(function () {
+    $(document).on("click", "#show-ticket-info", function() {
+        var ticket_id = $(this).data('ticket_id');
+        var owner_name = $(this).data('owner_name');
+        var id_number = $(this).data('id_number');
+        var owner_phone_number = $(this).data('owner_phone_number');
+        var owner_email_address = $(this).data('owner_email_address');
+        var owner_address = $(this).data('owner_address');
+        $("#ticket-info #ticket_id").val(ticket_id);
+        $("#ticket-info #name").val(owner_name);
+        $("#ticket-info #id_number").val(id_number);
+        $("#ticket-info #phone").val(owner_phone_number);
+        $("#ticket-info #email").val(owner_email_address);
+        $("#ticket-info #address").val(owner_address);
+    });
+});
+
