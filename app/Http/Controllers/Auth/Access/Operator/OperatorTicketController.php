@@ -12,26 +12,24 @@ use App\Models\Ticket;
 
 class OperatorTicketController extends Controller {
     public function ticketInvoicePayment($invoiceId){
-        $ticket = Invoice::with(['tickets.packet.galleries', 'tickets.packet.location', 'tickets.ticketDetail'])
-                            ->find($invoiceId);
+        $invoice = Invoice::find($invoiceId);
 
-        if(is_null($ticket)){
+        if(is_null($invoice)){
             return redirect()->back()->with('error', 'Ticket data not found, please contact Admin!');
         }
 
-        if ($ticket->payment_status == 1) {
-            if ($ticket->payment_status_detail == "paid") {
+        if ($invoice->payment_status == 1) {
+            if ($invoice->payment_status_detail == "paid") {
                 return redirect()->route('operator.transaction.invoice.ticket', ['invoiceId' => $invoiceId])
                                  ->with('warning', 'Transaction has already been finished!');
             }
 
-            if ($ticket->payment_status_detail == "cancelled") {
+            if ($invoice->payment_status_detail == "cancelled") {
                 return redirect()->back()->with('error', 'Transaction is cancelled!');
             }
         }
 
-
-
+        return view('auth.operator.page.invoicePay', compact(['invoice']));
     }
 
     public function ticketInvoiceList($invoiceId){

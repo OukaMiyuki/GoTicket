@@ -237,7 +237,10 @@ class OperatorTransactionController extends Controller {
             $ticketGeneration = $ticketService->generateTickets($userId, $cartData, $invoice);
             if (!$ticketGeneration['status']) {
                 // return redirect()->back()->with('error', $ticketGeneration['message']);
-                throw new Exception($ticketGeneration['message']);
+                return response()->json([
+                    'success' => false,
+                    'message' => $ticketGeneration['message'],
+                ], 500);
             }
 
             DB::commit();
@@ -254,7 +257,10 @@ class OperatorTransactionController extends Controller {
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Checkout process failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'There was an issue processing your order. Please try again later.');
+            return response()->json([
+                'success' => false,
+                'message' => 'There was an issue processing your order: ' . $e->getMessage(),
+            ], 500);
         }
     }
 

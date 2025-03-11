@@ -61,7 +61,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-file-uploader.css') }}">
 
     @if (Auth::check() && Auth::user()->role == "playground_operator")
-        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout') || Route::is('operator.transaction.invoice.ticket'))
+        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout') || Route::is('operator.transaction.invoice.ticket') || Route::is('operator.transaction.invoice.checkout.pay'))
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/extensions/ext-component-sliders.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/pages/app-ecommerce.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('theme/app-assets/css/plugins/forms/form-wizard.css') }}">
@@ -139,7 +139,7 @@
         @endif
     @endif
     @if (Auth::check() && Auth::user()->role == "playground_operator")
-        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout') || Route::is('operator.transaction.invoice.ticket'))
+        @if(Route::is('operator.transaction') || Route::is('operator.transaction.checkout') || Route::is('operator.transaction.invoice.ticket') || Route::is('operator.transaction.invoice.checkout.pay'))
             <script src="{{ asset('theme/app-assets/vendors/js/extensions/wNumb.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/vendors/js/extensions/nouislider.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/js/scripts/pages/app-ecommerce.js') }}"></script>
@@ -182,6 +182,58 @@
         })
     </script>
     <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('download-qr').addEventListener('click', function () {
+                // Get the SVG QR code element
+                var qrCodeElement = document.getElementById('qr-code-container').querySelector('svg');
+                
+                if (qrCodeElement) {
+                    // Create a new <a> element to trigger the download
+                    var link = document.createElement('a');
+                    
+                    // Convert the SVG to a PNG using the Canvas API
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+
+                    // Get the original SVG data
+                    var svgData = qrCodeElement.outerHTML;
+
+                    // Set the scaling factor (e.g., 2x the display size for download)
+                    var scaleFactor = 2; // Increase the download size (200px * 2 = 400px)
+
+                    // Scale the canvas to the larger size for download
+                    var svgBlob = new Blob([svgData], {type: 'image/svg+xml'});
+                    var reader = new FileReader();
+
+                    reader.onload = function () {
+                        var img = new Image();
+                        img.onload = function () {
+                            // Set the canvas size based on the scaling factor
+                            canvas.width = img.width * scaleFactor;  // Scale width
+                            canvas.height = img.height * scaleFactor;  // Scale height
+
+                            // Draw the image on the canvas
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                            // Convert canvas to PNG image data URL
+                            var dataUrl = canvas.toDataURL('image/png');
+
+                            // Set up the download link
+                            link.href = dataUrl;
+                            link.download = 'qr-code.png';  // Name for the downloaded file
+                            link.click();  // Trigger the download
+                        };
+                        img.src = reader.result;  // Convert the SVG to a data URL
+                    };
+                    
+                    reader.readAsDataURL(svgBlob);  // Convert SVG to a data URL
+                } else {
+                    console.error("QR code SVG element not found.");
+                }
+            });
+        });
+
         window.Laravel = {
             role: @json(auth()->check() ? auth()->user()->role : null)
         };

@@ -25,3 +25,53 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     height: 100%;
     object-fit: contain; /* Ensures the image is fully contained within the box without being cropped */
 }
+
+/* Style for the QR code container */
+.qr-container {
+    position: relative;
+    width: 200px; /* Set to match the QR code size */
+    margin-bottom: 1rem; /* Add space below QR code */
+}
+
+/* Style for the download button */
+.download-btn {
+    width: 100%; /* Make the button take up the full width of its parent */
+    max-width: 200px; /* Prevent button from being too wide */
+    display: block; /* Ensure the button is displayed as a block-level element */
+    text-align: center; /* Center text in the button */
+    margin-top: .5rem; /* Optional: add space between QR code and button */
+}
+
+/* Vertical Divider */
+.vertical-hr {
+    border: 0;
+    border-left: 2px solid rgba(0, 0, 0, 0.06); /* Lighter, semi-transparent color */
+    height: 100%; /* Set the height to fill the container */
+    margin: 0;
+    width: 0;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 767px) {
+    /* Center the QR code and button on mobile */
+    .qr-container {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto; /* Center horizontally */
+    }
+
+    .download-btn {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto; /* Center horizontally */
+    }
+
+    /* Make the vertical divider horizontal on mobile */
+    .vertical-hr {
+        border-left: 0;
+        border-top: 2px solid rgba(0, 0, 0, 0.06); /* Horizontal divider */
+        height: 0;
+        width: 100%;
+    }
+}
+
