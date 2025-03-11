@@ -19,7 +19,9 @@ return [
     */
 
     // 'driver' => env('SESSION_DRIVER', 'database'),
-    'driver' => env('SESSION_DRIVER', app()->environment('local') ? 'database' : 'redis'),
+    'driver' => env('SESSION_DRIVER', function () {
+        return app()->environment('local') ? 'database' : 'redis';
+    }),
 
     /*
     |--------------------------------------------------------------------------
