@@ -10,3 +10,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/payment/update', [PaymentConfirmController::class, 'updatePayment'])->name('api.payment.update');
+
+Route::get('/test', [PaymentConfirmController::class, 'test']);
