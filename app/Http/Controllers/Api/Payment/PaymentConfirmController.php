@@ -18,14 +18,20 @@ class PaymentConfirmController extends Controller {
         if(!Hash::check($paymentData['password'], $apiKeyData->key)){
             if($paymentData['api_key'] == $apiKeyData->secret_key){
                 Log::info('MASUK BOSSSSS');
-                echo "MASUK";
+                return response()->json([
+                    'success' => "OKE"
+                ]);
             } else {
                 Log::info("WRONG SECRET KEY");
-                echo "SA:AH SECRET KEY";
+                return response()->json([
+                    'error' => "WRONG SECRET KEY"
+                ]);
             }
         } else {
             Log::info('WRONG PASSWORD');
-            echo "SALAH PASSWORD";
+            return response()->json([
+                'error' => "WRONG Password"
+            ]);
         }
 
     }
