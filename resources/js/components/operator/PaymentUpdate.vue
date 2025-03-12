@@ -9,7 +9,11 @@ export default {
         }
     },
     mounted() {
+        console.log("Payment Update Vue component is mounted");
         this.setupPusher();
+    },
+    created() {
+        console.log('Payment Update Redirection.');
     },
     methods: {
         setupPusher() {
@@ -38,6 +42,7 @@ export default {
         },
         redirectUser() {
             const url = `/operator/transaction/invoice/ticket/${this.invoiceId}`;
+            console.log("Redirecting to:", url);
             window.location.href = url;
         }
   }
