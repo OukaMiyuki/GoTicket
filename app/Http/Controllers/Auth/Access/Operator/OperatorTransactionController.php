@@ -224,7 +224,6 @@ class OperatorTransactionController extends Controller {
                 'userId'                    => $userId,
                 'operatorId'                => $userId,
                 'transaction_timestamp'     => $now,
-                'payment_timestamp'         => $now,
                 'qty'                       => $qtyTotal,
                 'price'                     => $priceAmount,
                 'tax'                       => $tax_value,
