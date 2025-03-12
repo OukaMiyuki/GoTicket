@@ -14,28 +14,28 @@ class PaymentConfirmController extends Controller {
     public function updatePayment(Request $request){
         $paymentData = $request->all();
         $apiKeyData = ApiAccess::first();
-        Log::info(json_encode($paymentData, JSON_PRETTY_PRINT));
-        return response()->json([
-            'success' => "OK MASUK"
-        ]);
-        // if(!Hash::check($paymentData['password'], $apiKeyData->key)){
-        //     if($paymentData['api_key'] == $apiKeyData->secret_key){
-        //         Log::info('MASUK BOSSSSS');
-        //         return response()->json([
-        //             'success' => "OKE"
-        //         ]);
-        //     } else {
-        //         Log::info("WRONG SECRET KEY");
-        //         return response()->json([
-        //             'error' => "WRONG SECRET KEY"
-        //         ]);
-        //     }
-        // } else {
-        //     Log::info('WRONG PASSWORD');
-        //     return response()->json([
-        //         'error' => "WRONG Password"
-        //     ]);
-        // }
+        // Log::info(json_encode($paymentData, JSON_PRETTY_PRINT));
+        // return response()->json([
+        //     'success' => "OK MASUK"
+        // ]);
+        if(Hash::check($paymentData['password'], $apiKeyData->key)){
+            if($paymentData['api_key'] == $apiKeyData->secret_key){
+                Log::info('MASUK BOSSSSS');
+                return response()->json([
+                    'success' => "OKE"
+                ]);
+            } else {
+                Log::info("WRONG SECRET KEY");
+                return response()->json([
+                    'error' => "WRONG SECRET KEY"
+                ]);
+            }
+        } else {
+            Log::info('WRONG PASSWORD');
+            return response()->json([
+                'error' => "WRONG Password"
+            ]);
+        }
 
     }
 

@@ -36,36 +36,47 @@
                                 <div class="card">
                                     <div class="card-header flex-column align-items-start">
                                         <h4 class="card-title">Payment Information</h4>
-                                        <p class="card-text text-muted mt-25">Be sure to check "Deliver to this address" when you have finished</p>
+                                        <p class="card-text text-muted mt-25">Silakan ikuti langkah-langkah berikut untuk menyelesaikan proses pembayaran.</p>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-md-5">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-12 text-center">
-                                                        <div class="form-group mb-1">
-                                                            <div class="qr-container" id="qr-code-container">
-                                                                {!! QrCode::size(200)->generate($invoice->payment_reference) !!}
+                                            <div class="col-md-4">
+                                                @if ($invoice->payment_method === "Qris")
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-12 text-center">
+                                                            <div class="form-group mb-1">
+                                                                <div class="qr-container" id="qr-code-container">
+                                                                    {!! QrCode::size(200)->generate($invoice->payment_reference) !!}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row justify-content-center">
-                                                    <div class="col-12 text-center">
-                                                        <div class="form-group mb-2">
-                                                            <button type="button" class="btn btn-primary download-btn" id="download-qr">Download QR Code</button>
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-12 text-center">
+                                                            <div class="form-group mb-2">
+                                                                <button type="button" class="btn btn-primary download-btn" id="download-qr">Download QR Code</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @elseif($invoice->payment_method === "VA_NOBU")
+                                                @endif
                                             </div>
                                             <div class="col-md-1">
                                                 <hr class="vertical-hr">
                                             </div>
-                                            <div class="col-md-6">
-                                                {{-- Your items go here --}}
+                                            <div class="col-md-7">
+                                                @if ($invoice->payment_method === "Qris")
+                                                    <ol>
+                                                        <li>Unduh QR Code dari invoice (bisa di-screenshot dan dipotong).</li>
+                                                        <li>Buka aplikasi dompet digital yang mendukung QRIS (GoPay, OVO, Dana, dll.).</li>
+                                                        <li>Unggah QR Code yang telah diunduh.</li>
+                                                        <li>Periksa detail transaksi dan pastikan sudah sesuai.</li>
+                                                        <li>Lakukan pembayaran dan simpan bukti transaksi.</li>
+                                                    </ol>
+                                                @endif
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <!-- Checkout Customer Address Left ends -->
