@@ -105,6 +105,9 @@ class PaymentCallbackRequest extends FormRequest {
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator) {
         // Log validation errors
         Log::error('Payment callback validation failed', $validator->errors()->toArray());
+        Log::info('Payment status Value is', [
+            'invoiceInfo_paymentStatus' => $this->input('invoiceInfo.paymentStatus'),
+        ]);
 
         // Return a custom JSON response with validation errors
         throw new HttpResponseException(
