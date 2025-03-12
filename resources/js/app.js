@@ -35,6 +35,10 @@ if(userRole === 'playground_operator' || userRole === 'visitor_member'){
     app1.mount('#operator-cart');
 }
 
+const app3 = createApp({});
+app3.component('payment-update', PaymentUpdate);
+app3.mount('#operator-payment-update');
+
 document.addEventListener("DOMContentLoaded", function () {
     const currentPath = window.location.pathname;
 
@@ -60,17 +64,17 @@ document.addEventListener("DOMContentLoaded", function () {
     //     app3.mount('#operator-payment-update');
     // }
 
-    if (document.getElementById('operator-payment-update')) {
-        console.log("Element exists!");
+    // if (document.getElementById('operator-payment-update')) {
+    //     console.log("Element exists!");
 
-        if (currentPath.startsWith('/operator/transaction/checkout/pay')) {
-            console.log("Starts with '/operator/transaction/checkout/pay'");
-            if (/\d+$/.test(currentPath.split('/').pop())) {
-                console.log("Invoice ID is found:", currentPath.split('/').pop());
-                const app3 = createApp({});
-                app3.component('payment-update', PaymentUpdate);
-                app3.mount('#operator-payment-update');
-            }
-        }
-    }
+    //     if (currentPath.startsWith('/operator/transaction/checkout/pay')) {
+    //         console.log("Starts with '/operator/transaction/checkout/pay'");
+    //         if (/\d+$/.test(currentPath.split('/').pop())) {
+    //             console.log("Invoice ID is found:", currentPath.split('/').pop());
+    //             const app3 = createApp({});
+    //             app3.component('payment-update', PaymentUpdate);
+    //             app3.mount('#operator-payment-update');
+    //         }
+    //     }
+    // }
 });
