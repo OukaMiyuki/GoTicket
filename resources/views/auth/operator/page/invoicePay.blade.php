@@ -76,7 +76,9 @@
                                                 @endif
                                             </div>
                                         </div>
-
+                                        <div id="operator-payment-update">
+                                            <payment-update :invoice-id="{{ $invoice->id }}"></payment-update>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Checkout Customer Address Left ends -->
@@ -136,8 +138,5 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div id="operator-payment-update">
-        <payment-update :invoice-id="{{ $invoice->id }}"></payment-update>
     </div>
 </x-dashboard-layout>

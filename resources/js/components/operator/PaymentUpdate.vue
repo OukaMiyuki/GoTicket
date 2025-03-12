@@ -1,3 +1,6 @@
+<template>
+    <div></div>
+</template>
 <script>
 import Pusher from 'pusher-js';
 
