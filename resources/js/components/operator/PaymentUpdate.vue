@@ -1,8 +1,12 @@
 <template>
     <div></div>
 </template>
+
 <script>
+import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
 
 export default {
     props: {
@@ -15,23 +19,25 @@ export default {
         console.log("Payment Update Vue component is mounted");
         this.setupPusher();
     },
-    created() {
-        console.log('Payment Update Redirection.');
-    },
     methods: {
         setupPusher() {
-            const pusher = new Pusher('a0f8e18348832696e61b', {
+            const echo = new Echo({
+                broadcaster: 'pusher',
+                key: 'a0f8e18348832696e61b',
                 cluster: 'ap1',
-                forceTLS: true
+                forceTLS: true,
             });
 
-            const channel = pusher.subscribe('payment-channel');
-
-            channel.bind('App\\Events\\PaymentUpdated', (data) => {
-                if (data.invoiceId == this.invoiceId) {
-                    this.handlePaymentSuccess();
-                }
-            });
+            echo.channel('payment-channel')
+                .listen('App\\Events\\PaymentUpdated', (data) => {
+                    console.log("Received event data:", data);
+                    if (data.invoiceId == this.invoiceId) {
+                        console.log("Invoice ID matched! Triggering success.");
+                        this.handlePaymentSuccess();
+                    } else {
+                        console.log("Invoice ID did not match.");
+                    }
+                });
         },
         handlePaymentSuccess() {
             Swal.fire({
@@ -48,6 +54,6 @@ export default {
             console.log("Redirecting to:", url);
             window.location.href = url;
         }
-  }
+    }
 };
 </script>
