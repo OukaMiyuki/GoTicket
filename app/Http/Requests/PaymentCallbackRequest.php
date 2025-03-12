@@ -5,6 +5,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class PaymentCallbackRequest extends FormRequest {
     /**
@@ -60,13 +63,55 @@ class PaymentCallbackRequest extends FormRequest {
      *
      * @return array
      */
-    public function messages()
-    {
+    public function messages() {
         return [
             'paymentStatus.in' => 'The payment status must be either "PAID" or "FAILED".',
             'transactionTimestamp.date' => 'The transaction timestamp must be a valid date.',
             'paymentTimeStamp.date' => 'The payment timestamp must be a valid date.',
-            // Add custom messages for other rules if needed
+            'login.required' => 'The login field is required.',
+            'login.string' => 'The login field must be a string.',
+            'password.required' => 'The password field is required.',
+            'password.string' => 'The password field must be a string.',
+            'api_key.required' => 'The API key field is required.',
+            'api_key.string' => 'The API key field must be a string.',
+            'partnerTransactionNo.required' => 'The partner transaction number is required.',
+            'partnerTransactionNo.string' => 'The partner transaction number must be a string.',
+            'amount.required' => 'The amount field is required.',
+            'amount.numeric' => 'The amount must be a valid number.',
+            'cleanAmount.numeric' => 'The clean amount must be a valid number.',
+            'mdrPaymentAmount.numeric' => 'The MDR payment amount must be a valid number.',
+            'invoice_number.required' => 'The invoice number is required.',
+            'invoice_number.string' => 'The invoice number must be a string.',
+            'responseStatus.required' => 'The response status is required.',
+            'responseStatus.string' => 'The response status must be a string.',
+            'invoiceInfo.array' => 'The invoice info must be an array.',
+            'invoiceInfo.transactionDate.date' => 'The transaction date must be a valid date.',
+            'invoiceInfo.paymentDate.date' => 'The payment date must be a valid date.',
+            'invoiceInfo.paymentType.string' => 'The payment type must be a string.',
+            'invoiceInfo.paymentStatus.string' => 'The payment status must be a string.',
+            'invoiceInfo.tax.numeric' => 'The tax must be a valid number.',
+            'invoiceInfo.discount.numeric' => 'The discount must be a valid number.',
+            'invoiceInfo.mdr.numeric' => 'The MDR must be a valid number.',
+            'invoiceInfo.mdrAmount.numeric' => 'The MDR amount must be a valid number.',
+            'invoiceInfo.cleanAmount.numeric' => 'The clean amount must be a valid number.',
+            'invoiceInfo.aditionalInformation.array' => 'The additional information must be an array.',
+            'invoiceInfo.aditionalInformation.customReference.string' => 'The custom reference must be a string.',
+            'invoiceInfo.aditionalInformation.issuerId.string' => 'The issuer ID must be a string.',
+            'invoiceInfo.aditionalInformation.retrievalReferenceNo.string' => 'The retrieval reference number must be a string.',
+            'invoiceInfo.aditionalInformation.paymentReferenceNo.string' => 'The payment reference number must be a string.',
         ];
+    }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator) {
+        // Log validation errors
+        Log::error('Payment callback validation failed', $validator->errors()->toArray());
+
+        // Return a custom JSON response with validation errors
+        throw new HttpResponseException(
+            response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }
