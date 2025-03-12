@@ -53,10 +53,24 @@ document.addEventListener("DOMContentLoaded", function () {
     //     app3.mount('#operator-payment-update');
     // }
 
-    if (document.getElementById('operator-payment-update') && /^\/operator\/transaction\/checkout\/pay\/\d+$/.test(currentPath)) {
-        console.log("Mounting PaymentUpdate component");
-        const app3 = createApp({});
-        app3.component('payment-update', PaymentUpdate);
-        app3.mount('#operator-payment-update');
+    // if (document.getElementById('operator-payment-update') && /^\/operator\/transaction\/checkout\/pay\/\d+$/.test(currentPath)) {
+    //     console.log("Mounting PaymentUpdate component");
+    //     const app3 = createApp({});
+    //     app3.component('payment-update', PaymentUpdate);
+    //     app3.mount('#operator-payment-update');
+    // }
+
+    if (document.getElementById('operator-payment-update')) {
+        console.log("Element exists!");
+
+        if (currentPath.startsWith('/operator/transaction/checkout/pay')) {
+            console.log("Starts with '/operator/transaction/checkout/pay'");
+            if (/\d+$/.test(currentPath.split('/').pop())) {
+                console.log("Invoice ID is found:", currentPath.split('/').pop());
+                const app3 = createApp({});
+                app3.component('payment-update', PaymentUpdate);
+                app3.mount('#operator-payment-update');
+            }
+        }
     }
 });
