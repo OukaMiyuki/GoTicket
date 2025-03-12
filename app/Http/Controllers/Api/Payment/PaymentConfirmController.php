@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\PaymentCallbackRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Events\PaymentUpdated;
 use App\Models\ApiAccess;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
@@ -33,7 +34,7 @@ class PaymentConfirmController extends Controller {
                     }
 
                     $this->updateInvoiceProcess($invoice);
-
+                    broadcast(new PaymentUpdated($invoice->id));
                     return response()->json([
                         'message' => 'Transaction Success',
                         'status' => 200

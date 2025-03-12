@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import PacketList from './components/operator/PacketList.vue';
 import CartList from './components/operator/OperatorCart.vue';
 import CheckOut from './components/operator/OperatorCheckout.vue';
+import PaymentUpdate from './components/operator/PaymentUpdate.vue';
 import Alpine from 'alpinejs';
 import axios from 'axios';
 
@@ -45,5 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const app2 = createApp({});
         app2.component('packet-checkout-list', CheckOut);
         app2.mount('#operator-packet-checkout');
+    } else if(document.getElementById('operator-payment-update') && currentPath.startsWith('/operator/transaction/checkout/pay')){
+        const app3 = createApp({});
+        app3.component('payment-update', PaymentUpdate);
+        app3.mount('#operator-payment-update');
     }
 });
