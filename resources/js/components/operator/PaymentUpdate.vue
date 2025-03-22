@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div></div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
                 //         console.log("Invoice ID did not match.");
                 //     }
                 // });
-                .listen('.App.Events.PaymentUpdated', (data) => {
+                .listen('.payment.updated', (data) => {
                     console.log("Received event data:", data);
                     if (data.invoiceId == this.invoiceId) {
                         console.log("Invoice ID matched! Triggering success.");
@@ -78,10 +78,10 @@ export default {
         }
     }
 };
-</script> -->
+</script>
 
 
-<template>
+<!-- <template>
     <div></div>
   </template>
 
@@ -144,4 +144,4 @@ export default {
       }
     }
   };
-  </script>
+  </script> -->
