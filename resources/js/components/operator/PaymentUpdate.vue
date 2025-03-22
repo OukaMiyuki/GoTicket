@@ -32,16 +32,21 @@ export default {
                 console.log('Connected to Pusher!');
             });
 
+            // echo.channel('payment-channel')
+            //     .listen('App\\Events\\PaymentUpdated', (data) => {
+            //         console.log("Received event data:", data);
+            //         if (String(data.invoiceId) === String(this.invoiceId)) {
+            //             console.log("Invoice ID matched! Triggering success.");
+            //             this.handlePaymentSuccess();
+            //         } else {
+            //             console.log("Invoice ID did not match.");
+            //         }
+            //     });
+
             echo.channel('payment-channel')
-                .listen('App\\Events\\PaymentUpdated', (data) => {
-                    console.log("Received event data:", data);
-                    if (String(data.invoiceId) === String(this.invoiceId)) {
-                        console.log("Invoice ID matched! Triggering success.");
-                        this.handlePaymentSuccess();
-                    } else {
-                        console.log("Invoice ID did not match.");
-                    }
-                });
+                    .listen('App\\Events\\PaymentUpdated', (data) => {
+                        console.log("Event received:", data);
+                    });
                 // .listen('App.Events.PaymentUpdated', (data) => {
                 //     console.log("Received event data:", data);
                 //     if (data.invoiceId == this.invoiceId) {
