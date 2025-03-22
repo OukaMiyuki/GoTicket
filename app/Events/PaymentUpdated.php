@@ -28,4 +28,8 @@ class PaymentUpdated implements ShouldBroadcast {
     public function broadcastOn() {
         return new Channel('payment-channel');
     }
+
+    public function broadcastAs() {
+        return 'App.Events.PaymentUpdated';
+    }
 }

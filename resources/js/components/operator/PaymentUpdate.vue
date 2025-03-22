@@ -29,7 +29,7 @@ export default {
             });
 
             echo.channel('payment-channel')
-                .listen('App\\Events\\PaymentUpdated', (data) => {
+                .listen('App.Events.PaymentUpdated', (data) => {
                     console.log("Received event data:", data);
                     if (data.invoiceId == this.invoiceId) {
                         console.log("Invoice ID matched! Triggering success.");
