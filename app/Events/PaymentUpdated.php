@@ -30,6 +30,6 @@ class PaymentUpdated implements ShouldBroadcast {
     }
 
     public function broadcastAs() {
-        return 'App.Events.PaymentUpdated';
+        return 'payment.updated';
     }
 }
