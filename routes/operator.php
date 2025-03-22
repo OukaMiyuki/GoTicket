@@ -21,4 +21,9 @@ Route::middleware(['role:playground_operator'])->group( function(){
     Route::post('/operator/transaction/invoice/ticket/info/insert', [OperatorTicketController::class, 'ticketInvoiceInfoInsert'])->name('operator.transaction.invoice.ticket.info.insert');
 
     Route::get('/operator/cekqris', [OperatorTransactionController::class, 'testQris']);
+
+    Route::get('/test-broadcast', function () {
+        broadcast(new \App\Events\PaymentUpdated(70));
+        return 'Broadcast sent';
+    });
 });
