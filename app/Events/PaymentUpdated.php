@@ -29,7 +29,7 @@ class PaymentUpdated implements ShouldBroadcast {
         return new Channel('payment-channel');
     }
 
-    public function broadcastAs() {
-        //return 'App.Events.PaymentUpdated';
-    }
+    // public function broadcastAs() {
+    //     //return 'App.Events.PaymentUpdated';
+    // }
 }
