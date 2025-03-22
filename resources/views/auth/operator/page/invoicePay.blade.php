@@ -55,6 +55,7 @@
                                                         <div class="col-12 text-center">
                                                             <div class="form-group mb-2">
                                                                 <button type="button" class="btn btn-primary download-btn" id="download-qr">Download QR Code</button>
+                                                                <button type="button" class="btn btn-primary download-btn" id="download-qr">Check Payment</button>
                                                             </div>
                                                         </div>
                                                     </div>
