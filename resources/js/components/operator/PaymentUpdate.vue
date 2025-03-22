@@ -16,7 +16,7 @@ export default {
         }
     },
     mounted() {
-        console.log("Payment Update Vue component is mounted");
+        console.log("Payment Update Vue component is mounted test");
         this.setupPusher();
     },
     methods: {
