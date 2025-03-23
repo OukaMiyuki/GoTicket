@@ -51,7 +51,16 @@ export default {
                 //         console.log("Invoice ID did not match.");
                 //     }
                 // });
-                .listen('.payment.updated', (data) => {
+                // .listen('.payment.updated', (data) => {
+                //     console.log("Received event data:", data);
+                //     if (data.invoiceId == this.invoiceId) {
+                //         console.log("Invoice ID matched! Triggering success.");
+                //         this.handlePaymentSuccess();
+                //     } else {
+                //         console.log("Invoice ID did not match.");
+                //     }
+                // });
+                .listen('.PaymentUpdated', (data) => {
                     console.log("Received event data:", data);
                     if (data.invoiceId == this.invoiceId) {
                         console.log("Invoice ID matched! Triggering success.");

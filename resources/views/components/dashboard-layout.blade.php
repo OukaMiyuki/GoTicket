@@ -187,11 +187,11 @@
             document.getElementById('download-qr').addEventListener('click', function () {
                 // Get the SVG QR code element
                 var qrCodeElement = document.getElementById('qr-code-container').querySelector('svg');
-                
+
                 if (qrCodeElement) {
                     // Create a new <a> element to trigger the download
                     var link = document.createElement('a');
-                    
+
                     // Convert the SVG to a PNG using the Canvas API
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext('2d');
@@ -226,7 +226,7 @@
                         };
                         img.src = reader.result;  // Convert the SVG to a data URL
                     };
-                    
+
                     reader.readAsDataURL(svgBlob);  // Convert SVG to a data URL
                 } else {
                     console.error("QR code SVG element not found.");
@@ -237,6 +237,10 @@
         window.Laravel = {
             role: @json(auth()->check() ? auth()->user()->role : null)
         };
+
+        document.getElementById("check-payment").addEventListener("click", function() {
+            location.reload();
+        });
     </script>
 </body>
 </html>
