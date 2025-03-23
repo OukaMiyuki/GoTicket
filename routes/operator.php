@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\Access\DashboardController;
 use App\Http\Controllers\Auth\Access\Operator\OperatorTransactionController;
 use App\Http\Controllers\Auth\Access\Operator\OperatorTicketController;
+use App\Http\Controllers\Auth\Access\Operator\OperatorDataController;
 
 Route::middleware(['role:playground_operator'])->group( function(){
     Route::get('/operator', [DashboardController::class, 'operator'])->name('operator.dashboard');
@@ -19,6 +20,9 @@ Route::middleware(['role:playground_operator'])->group( function(){
 
     Route::get('/operator/transaction/invoice/ticket/{invoiceId}', [OperatorTicketController::class, 'ticketInvoiceList'])->name('operator.transaction.invoice.ticket');
     Route::post('/operator/transaction/invoice/ticket/info/insert', [OperatorTicketController::class, 'ticketInvoiceInfoInsert'])->name('operator.transaction.invoice.ticket.info.insert');
+
+    Route::get('/operator/data/packet', [OperatorDataController::class, 'index_packet'])->name('operator.dashboard.packet');
+    Route::get('/operator/data/packet-data', [OperatorDataController::class, 'getPacketData'])->name('operator.dashboard.packet-data');
 
     Route::get('/operator/cekqris', [OperatorTransactionController::class, 'testQris']);
 

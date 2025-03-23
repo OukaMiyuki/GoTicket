@@ -125,7 +125,7 @@
         @elseif(Route::is('tenant.dashboard.employee'))
             <script src="{{ asset('theme/app-assets/js/scripts/tables/table-user-datatables-basic.js') }}"></script>
         @elseif(Route::is('tenant.dashboard.packet'))
-            <script src="{{ asset('theme/app-assets/js/scripts/tables/table-packet-datatables-basic.js') }}"></script>
+            <script src="{{ asset('theme/app-assets/js/scripts/tables/table-packet-datatables-basic-tenant.js') }}"></script>
         @elseif(Route::is('tenant.dashboard.packet.add'))
             <script src="{{ asset('theme/app-assets/js/scripts/forms/form-validation.js') }}"></script>
             <script src="{{ asset('theme/app-assets/js/scripts/forms/form-quill-editor.js') }}"></script>
@@ -146,6 +146,8 @@
             <script src="{{ asset('theme/app-assets/vendors/js/forms/wizard/bs-stepper.min.js') }}"></script>
             <script src="{{ asset('theme/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js') }}"></script>
             <script src="{{ asset('theme/app-assets/js/scripts/pages/app-ecommerce-checkout.js') }}"></script>
+        @elseif(Route::is('operator.dashboard.packet'))
+            <script src="{{ asset('theme/app-assets/js/scripts/tables/table-packet-datatables-basic-operator.js') }}"></script>
         @endif
     @endif
     <script>

@@ -38,14 +38,17 @@ class OperatorTransactionController extends Controller {
         }
     }
     public function fetchData(Request $request) {
-
+        $id = Auth::id();
+        $locationIds = User::find($id)?->location()->pluck('locations.id')->toArray();
+        // Log::info( $locationIds );
         $search = $request->query('search', '');
         $page = $request->query('page', 1);
 
         $packets = Packet::with(['galleries', 'location'])
+                        ->whereIn('locationId', $locationIds)
                         ->where('packet_name', 'like', "%{$search}%")
                         ->paginate(10);
-
+                        Log::info($packets);
         return response()->json($packets);
     }
 

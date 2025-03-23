@@ -145,8 +145,8 @@
                     <span data-i18n="Data &amp; Transaction">Data &amp; Transaction</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
-                <li class="nav-item @if(Route::is('tenant.dashboard.location')) active @endif">
-                    <a class="d-flex align-items-center" href="{{ route('tenant.dashboard.location') }}">
+                <li class="nav-item @if(Route::is('operator.dashboard.packet')) active @endif">
+                    <a class="d-flex align-items-center" href="{{ route('operator.dashboard.packet') }}">
                         <i data-feather='map'></i>
                         <span class="menu-title text-truncate" data-i18n="Map-Pin">Packet List</span>
                     </a>
