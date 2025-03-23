@@ -121,7 +121,7 @@ export default {
                     forceTLS: true,
                  });
 
-                echo.private('payment-channel')
+                echo.channel('payment-channel')
                     .listen('.PaymentUpdated', (e) => {
                         console.log("Received event data:", e);
                         const receivedInvoiceId = e.invoiceId || (e.data && e.data.invoiceId);
@@ -134,14 +134,24 @@ export default {
                     });
             },
             handlePaymentSuccess() {
+                // Swal.fire({
+                //     title: 'Payment Success',
+                //     text: 'Your payment has been processed successfully.',
+                //     icon: 'success',
+                //     confirmButtonText: 'OK'
+                // }).then(() => {
+                //     this.redirectUser();
+                // });
                 Swal.fire({
                     title: 'Payment Success',
                     text: 'Your payment has been processed successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK'
-                }).then(() => {
-                    this.redirectUser();
                 });
+                console.log("Redirecting after SweetAlert...");
+                setTimeout(() => {
+                    this.redirectUser();
+                }, 2000);
             },
              redirectUser() {
                 const url = `/operator/transaction/invoice/ticket/${this.invoiceId}`;
